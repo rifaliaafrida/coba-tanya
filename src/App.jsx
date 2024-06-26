@@ -7,7 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import CreateThreadPage from './pages/CreateThreadPage';
 import HomePage from './pages/HomePage';
 
-const App = () => {
+function App() {
   return (
     <div className="App">
       <Routes>
@@ -20,6 +20,6 @@ const App = () => {
       </Routes>
     </div>
   );
-};
+}
 
 export default App;

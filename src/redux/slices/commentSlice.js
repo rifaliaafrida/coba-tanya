@@ -10,7 +10,7 @@ export const createComment = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const commentSlice = createSlice({
@@ -20,20 +20,26 @@ const commentSlice = createSlice({
     loading: false,
     error: null,
   },
+  reducers: {
+    // Synchronous reducers can be added here if needed
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(createComment.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(createComment.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data.push(action.payload);
-      })
-      .addCase(createComment.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+      .addCase(createComment.pending, (state) => ({
+        ...state,
+        loading: true,
+        error: null,
+      }))
+      .addCase(createComment.fulfilled, (state, action) => ({
+        ...state,
+        loading: false,
+        data: [...state.data, action.payload],
+      }))
+      .addCase(createComment.rejected, (state, action) => ({
+        ...state,
+        loading: false,
+        error: action.payload,
+      }));
   },
 });
 

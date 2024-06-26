@@ -1,19 +1,18 @@
-// src/services/api.js
-const BASE_URL = "https://forum-api.dicoding.dev/v1";
+const BASE_URL = 'https://forum-api.dicoding.dev/v1';
 
 const api = (() => {
   function putAccessToken(token) {
-    localStorage.setItem("access_token", token);
+    localStorage.setItem('access_token', token);
   }
 
   function getAccessToken() {
-    return localStorage.getItem("access_token");
+    return localStorage.getItem('access_token');
   }
 
   async function fetchWithAuth(url, options = {}) {
     const accessToken = getAccessToken();
     if (!accessToken) {
-      throw new Error("Access token not found.");
+      throw new Error('Access token not found.');
     }
 
     try {
@@ -26,21 +25,21 @@ const api = (() => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok.");
+        throw new Error('Network response was not ok.');
       }
 
       return response.json();
     } catch (error) {
-      throw new Error("Fetch failed: " + error.message);
+      throw new Error(`Fetch failed: ${error.message}`);
     }
   }
 
   async function register({ name, email, password }) {
     try {
       const response = await fetch(`${BASE_URL}/register`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name,
@@ -50,27 +49,27 @@ const api = (() => {
       });
 
       if (!response.ok) {
-        throw new Error("Registration failed. Please try again.");
+        throw new Error('Registration failed. Please try again.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.user;
     } catch (error) {
-      throw new Error("Register failed: " + error.message);
+      throw new Error(`Register failed: ${error.message}`);
     }
   }
 
   async function login({ email, password }) {
     try {
       const response = await fetch(`${BASE_URL}/login`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
@@ -79,19 +78,19 @@ const api = (() => {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed. Please check your credentials.");
+        throw new Error('Login failed. Please check your credentials.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       putAccessToken(data.token); // Store token in local storage
       return data.token;
     } catch (error) {
-      throw new Error("Login failed: " + error.message);
+      throw new Error(`Login failed: ${error.message}`);
     }
   }
 
@@ -100,18 +99,18 @@ const api = (() => {
       const response = await fetchWithAuth(`${BASE_URL}/users`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch users.");
+        throw new Error('Failed to fetch users.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.users;
     } catch (error) {
-      throw new Error("Fetch all users failed: " + error.message);
+      throw new Error(`Fetch all users failed: ${error.message}`);
     }
   }
 
@@ -120,27 +119,27 @@ const api = (() => {
       const response = await fetchWithAuth(`${BASE_URL}/users/me`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch own profile.");
+        throw new Error('Failed to fetch own profile.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.user;
     } catch (error) {
-      throw new Error("Get own profile failed: " + error.message);
+      throw new Error(`Get own profile failed: ${error.message}`);
     }
   }
 
-  async function createThread({ title, body, category = "" }) {
+  async function createThread({ title, body, category = '' }) {
     try {
       const response = await fetchWithAuth(`${BASE_URL}/threads`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           title,
@@ -150,18 +149,18 @@ const api = (() => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create thread.");
+        throw new Error('Failed to create thread.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.thread;
     } catch (error) {
-      throw new Error("Create thread failed: " + error.message);
+      throw new Error(`Create thread failed: ${error.message}`);
     }
   }
 
@@ -170,20 +169,18 @@ const api = (() => {
       const response = await fetch(`${BASE_URL}/threads`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch threads.");
+        throw new Error('Failed to fetch threads.');
       }
 
       const { status, message, data } = await response.json();
 
-      console.log(data);
-
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.threads;
     } catch (error) {
-      throw new Error("Fetch all threads failed: " + error.message);
+      throw new Error(`Fetch all threads failed: ${error.message}`);
     }
   }
 
@@ -192,18 +189,18 @@ const api = (() => {
       const response = await fetch(`${BASE_URL}/threads/${threadId}`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch thread detail.");
+        throw new Error('Failed to fetch thread detail.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.detailThread;
     } catch (error) {
-      throw new Error("Fetch thread detail failed: " + error.message);
+      throw new Error(`Fetch thread detail failed: ${error.message}`);
     }
   }
 
@@ -212,29 +209,29 @@ const api = (() => {
       const response = await fetchWithAuth(
         `${BASE_URL}/threads/${id}/comments`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             content,
           }),
-        }
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to create comment.");
+        throw new Error('Failed to create comment.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.comment;
     } catch (error) {
-      throw new Error("Create comment failed: " + error.message);
+      throw new Error(`Create comment failed: ${error.message}`);
     }
   }
 
@@ -243,23 +240,23 @@ const api = (() => {
       const response = await fetchWithAuth(
         `${BASE_URL}/threads/${threadId}/up-vote`,
         {
-          method: "POST",
-        }
+          method: 'POST',
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to upvote thread.");
+        throw new Error('Failed to upvote thread.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.vote;
     } catch (error) {
-      throw new Error("Upvote thread failed: " + error.message);
+      throw new Error(`Upvote thread failed: ${error.message}`);
     }
   }
 
@@ -268,23 +265,23 @@ const api = (() => {
       const response = await fetchWithAuth(
         `${BASE_URL}/threads/${threadId}/down-vote`,
         {
-          method: "POST",
-        }
+          method: 'POST',
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to downvote thread.");
+        throw new Error('Failed to downvote thread.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.vote;
     } catch (error) {
-      throw new Error("Downvote thread failed: " + error.message);
+      throw new Error(`Downvote thread failed: ${error.message}`);
     }
   }
 
@@ -293,23 +290,23 @@ const api = (() => {
       const response = await fetchWithAuth(
         `${BASE_URL}/threads/${threadId}/neutral-vote`,
         {
-          method: "POST",
-        }
+          method: 'POST',
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to vote thread neutrally.");
+        throw new Error('Failed to vote thread neutrally.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.vote;
     } catch (error) {
-      throw new Error("Neutral vote thread failed: " + error.message);
+      throw new Error(`Neutral vote thread failed: ${error.message}`);
     }
   }
 
@@ -318,23 +315,23 @@ const api = (() => {
       const response = await fetchWithAuth(
         `${BASE_URL}/threads/${threadId}/comments/${commentId}/up-vote`,
         {
-          method: "POST",
-        }
+          method: 'POST',
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to upvote comment.");
+        throw new Error('Failed to upvote comment.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.vote;
     } catch (error) {
-      throw new Error("Upvote comment failed: " + error.message);
+      throw new Error(`Upvote comment failed: ${error.message}`);
     }
   }
 
@@ -343,23 +340,23 @@ const api = (() => {
       const response = await fetchWithAuth(
         `${BASE_URL}/threads/${threadId}/comments/${commentId}/down-vote`,
         {
-          method: "POST",
-        }
+          method: 'POST',
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to downvote comment.");
+        throw new Error('Failed to downvote comment.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.vote;
     } catch (error) {
-      throw new Error("Downvote comment failed: " + error.message);
+      throw new Error(`Downvote comment failed: ${error.message}`);
     }
   }
 
@@ -368,23 +365,23 @@ const api = (() => {
       const response = await fetchWithAuth(
         `${BASE_URL}/threads/${threadId}/comments/${commentId}/neutral-vote`,
         {
-          method: "POST",
-        }
+          method: 'POST',
+        },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to vote comment neutrally.");
+        throw new Error('Failed to vote comment neutrally.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.vote;
     } catch (error) {
-      throw new Error("Neutral vote comment failed: " + error.message);
+      throw new Error(`Neutral vote comment failed: ${error.message}`);
     }
   }
 
@@ -393,18 +390,18 @@ const api = (() => {
       const response = await fetch(`${BASE_URL}/leaderboards`);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch leaderboards.");
+        throw new Error('Failed to fetch leaderboards.');
       }
 
       const { status, message, data } = await response.json();
 
-      if (status !== "success") {
+      if (status !== 'success') {
         throw new Error(message);
       }
 
       return data.leaderboards;
     } catch (error) {
-      throw new Error("Fetch leaderboards failed: " + error.message);
+      throw new Error(`Fetch leaderboards failed: ${error.message}`);
     }
   }
 

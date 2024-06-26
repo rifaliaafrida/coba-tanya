@@ -12,34 +12,36 @@ function CommentForm({ threadId }) {
 
   const handleCommentSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      dispatch(createComment({ threadId, content: comment }));
-      setComment(''); 
+      await dispatch(createComment({ threadId, content: comment }));
+      setComment('');
       navigate('/home');
     } catch (err) {
-      console.error('Failed to create comment:', err);
+      // Optional: Handle error state or display user-friendly message
     }
   };
 
   return (
-    <form onSubmit={handleCommentSubmit} className="comment-form">
-      <label className="form-label">Comment</label>
-      <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        required
-        className="form-textarea"
-        placeholder="Enter your comment here..."
-      />
-      <button type="submit" disabled={loading} className="form-button">
-        {loading ? 'Submitting...' : 'Submit Comment'}
-      </button>
-      {error && <p className="form-error">{error}</p>}
-    </form>
+    <div className="comment-form">
+      <form onSubmit={handleCommentSubmit}>
+        <textarea
+          id="comment"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          required
+          className="form-textarea"
+          placeholder="Enter your comment here..."
+        />
+        <button type="submit" disabled={loading} className="form-button">
+          {loading ? 'Submitting...' : 'Submit Comment'}
+        </button>
+        {error && <p className="form-error">{error}</p>}
+      </form>
+    </div>
   );
 }
 
-// Add prop-types validation for threadId
 CommentForm.propTypes = {
   threadId: PropTypes.string.isRequired,
 };

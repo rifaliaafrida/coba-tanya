@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../redux/slices/authSlice';
 
-const RegisterForm = () => {
+function RegisterForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,21 +24,21 @@ const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit} className="form">
       <h2>Register</h2>
-      <label>Name</label>
+      <p>Name</p>
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
       />
-      <label>Email</label>
+      <p>Email</p>
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-      <label>Password</label>
+      <p>Password</p>
       <input
         type="password"
         value={password}
@@ -48,6 +48,6 @@ const RegisterForm = () => {
       <button type="submit">Register</button>
     </form>
   );
-};
+}
 
 export default RegisterForm;

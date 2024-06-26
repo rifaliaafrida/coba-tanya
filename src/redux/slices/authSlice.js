@@ -1,11 +1,10 @@
-// src/redux/slices/authSlice.js
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../services/api";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../services/api';
 
-const token = localStorage.getItem("access_token");
+const initialToken = localStorage.getItem('access_token');
 
 export const loginUser = createAsyncThunk(
-  "auth/login",
+  'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
       const token = await api.login(credentials);
@@ -15,74 +14,107 @@ export const loginUser = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const registerUser = createAsyncThunk(
-  "auth/register",
+  'auth/register',
   async (userData, { rejectWithValue }) => {
     try {
       await api.register(userData);
-      const token = await api.login({
+      const registerToken = await api.login({
         email: userData.email,
         password: userData.password,
       });
-      api.putAccessToken(token);
+      api.putAccessToken(registerToken);
       const user = await api.getOwnProfile();
-      return { token, user };
+      return { registerToken, user };
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
+);
+
+export const fetchUser = createAsyncThunk(
+  'auth/fetchUser',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const user = await api.getUser(userId);
+      return user;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
 );
 
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
     user: null,
-    token: token ? token : null,
-    isLoggedIn: token ? true : false,
-    status: "idle",
+    token: initialToken || null,
+    isLoggedIn: !!initialToken,
+    status: 'idle',
     error: null,
   },
   reducers: {
-    logout(state) {
-      state.user = null;
-      state.token = null;
-      state.isLoggedIn = false;
-      localStorage.removeItem("access_token");
-    },
+    logout: (state) => ({
+      ...state,
+      user: null,
+      token: null,
+      isLoggedIn: false,
+    }),
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isLoggedIn = true;
-        state.status = "succeeded";
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(registerUser.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isLoggedIn = true;
-        state.status = "succeeded";
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      });
+      .addCase(loginUser.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(loginUser.fulfilled, (state, action) => ({
+        ...state,
+        user: action.payload.user,
+        token: action.payload.token,
+        isLoggedIn: true,
+        status: 'succeeded',
+      }))
+      .addCase(loginUser.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(registerUser.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(registerUser.fulfilled, (state, action) => ({
+        ...state,
+        user: action.payload.user,
+        token: action.payload.registerToken,
+        isLoggedIn: true,
+        status: 'succeeded',
+      }))
+      .addCase(registerUser.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(fetchUser.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(fetchUser.fulfilled, (state, action) => ({
+        ...state,
+        user: action.payload,
+        status: 'succeeded',
+      }))
+      .addCase(fetchUser.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }));
   },
 });
 
