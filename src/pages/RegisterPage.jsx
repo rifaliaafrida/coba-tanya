@@ -1,16 +1,17 @@
 // src/pages/RegisterPage.js
 import React from 'react';
-import { Link } from 'react-router-dom';
 import RegisterForm from '../components/RegisterForm';
+import rabbitImage from '../assets/image/rabbit.png'; // Import the image
 
 const RegisterPage = () => (
-  <div className="register-page">
-    <h2>Register</h2>
+  <div className="login-page">
+  <div className="form__login">
     <RegisterForm />
-    <p>
-      Already have an account? <Link to="/login">Login here</Link>
-    </p>
   </div>
+  <div className='maskot' >
+    <img className="icon__login" src={rabbitImage} alt="Rabbit Icon" /> {/* Use the imported image */}
+  </div>
+</div>
 );
 
 export default RegisterPage;

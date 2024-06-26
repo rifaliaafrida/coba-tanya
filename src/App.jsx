@@ -17,7 +17,6 @@ const App = () => {
         <Route path="/threads" element={<ThreadPage />} />
         <Route path="/threads/:id" element={<ThreadDetail />} />
         <Route path="/create-thread" element={<CreateThreadPage />} />
-        {/* Tambahkan rute-rute tambahan sesuai kebutuhan */}
       </Routes>
     </div>
   );

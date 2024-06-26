@@ -1,39 +1,37 @@
 // src/components/ThreadDetail.js
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fetchThreadDetail, selectThreadDetail } from '../redux/slices/threadSlice';
-import CommentForm from './CommentForm';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchThreadDetail } from "../redux/slices/threadSlice";
+import CommentForm from "./CommentForm";
 
 const ThreadDetail = () => {
-  const { threadId } = useParams();
+  const { id } = useParams();
   const dispatch = useDispatch();
-  const threadDetail = useSelector(selectThreadDetail);
-  const loading = useSelector((state) => state.threads.threadDetail.status === 'loading');
-  const error = useSelector((state) => state.threads.threadDetail.error);
+  const { detail } = useSelector((state) => state.threads);
 
   useEffect(() => {
-    dispatch(fetchThreadDetail(threadId));
-  }, [dispatch, threadId]);
+    dispatch(fetchThreadDetail(id));
+  }, [dispatch, id]);
 
   return (
     <div className="thread-detail">
-      {loading && <p>Loading thread...</p>}
-      {error && <p>{error}</p>}
-      {threadDetail && (
+      {detail.status === "loading" && <p>Loading thread...</p>}
+      {detail.status === "failesd" && <p>{detail.error}</p>}
+      {detail.status === "success" && (
         <>
-          <h2>{threadDetail.title}</h2>
-          <p>{threadDetail.body}</p>
-          <p>Created by: {threadDetail.ownerId}</p>
-          <p>Comments: {threadDetail.totalComments}</p>
+          <h2>{detail.thread.title}</h2>
+          <p>{detail.thread.body}</p>
+          <p>Created by: {detail.thread.owner.name}</p>
+          <p>Comments: {detail.thread.totalComments}</p>
           <h3>Comments</h3>
-          {threadDetail.comments.map((comment) => (
+          {detail.thread.comments.map((comment) => (
             <div key={comment.id}>
               <p>{comment.content}</p>
-              <p>Created by: {comment.ownerId}</p>
+              <p>Created by: {comment.owner.name}</p>
             </div>
           ))}
-          <CommentForm threadId={threadId} />
+          <CommentForm threadId={id} />
         </>
       )}
     </div>

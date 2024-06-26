@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ThreadDetail from '../components/ThreadDetail';
 import { fetchThreadDetail, selectThreadDetail } from '../redux/slices/threadSlice';
+import Header from '../components/Header';
 
 const ThreadPage = () => {
   const { threadId } = useParams();
@@ -16,6 +17,7 @@ const ThreadPage = () => {
 
   return (
     <div className="thread-page">
+            <Header/>
       {threadDetail.status === 'loading' && <p>Loading thread...</p>}
       {threadDetail.status === 'succeeded' && <ThreadDetail />}
       {threadDetail.status === 'failed' && <p>{threadDetail.error}</p>}
