@@ -1,9 +1,14 @@
 import React from 'react';
+import { LineWave } from 'react-loader-spinner';
 
 function Loader() {
   return (
-    <div className="loader-container">
-      <div className="loader" />
+    <div>
+      <LineWave
+        height={80}
+        width="100%"
+        color="blue"
+      />
     </div>
   );
 }

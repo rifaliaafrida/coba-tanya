@@ -4,6 +4,7 @@ import ThreadList from '../components/ThreadList';
 import { fetchThreads } from '../redux/slices/threadSlice';
 import { fetchUser } from '../redux/slices/authSlice'; // Import fungsi fetchUser dari service API
 import Header from '../components/Header';
+import DataFetchingComponent from '../components/DataFetching';
 
 function HomePage() {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ function HomePage() {
   return (
     <div className="home-page">
       <Header />
-      {status === 'loading' && <p>Loading threads...</p>}
+      {status === 'loading' && <DataFetchingComponent />}
       {status === 'success' && data && <ThreadList threads={data} usersMap={usersMap} />}
       {' '}
       {/* Kirim usersMap sebagai prop */}
